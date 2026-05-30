@@ -19,7 +19,7 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const siteUrl = "https://solace.app"; // Change to your real domain when ready
+const siteUrl = "https://solace-gray-mu.vercel.app"; // Change to your real domain when ready
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

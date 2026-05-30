@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/admin/"],
       },
     ],
-    sitemap: "https://solace.app/sitemap.xml",
+    sitemap: "https://solace-gray-mu.vercel.app/sitemap.xml",
   };
 }
