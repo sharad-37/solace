@@ -7,32 +7,31 @@ const linkGroups = [
   {
     label: "Product",
     links: [
-      { label: "Features", href: "#features" },
-      { label: "Aura", href: "#aura" },
-      { label: "Voice Journal", href: "#voice-journal" },
-      { label: "Mood Tracking", href: "#features" },
+      { label: "Features", href: "/#features" },
+      { label: "Aura", href: "/#aura" },
+      { label: "Voice Journal", href: "/#voice-journal" },
+      { label: "Pricing", href: "/pricing" },
     ],
   },
   {
     label: "Company",
     links: [
-      { label: "About", href: "#about" },
-      { label: "Stories", href: "#stories" },
-      { label: "Careers", href: "#" },
-      { label: "Press", href: "#" },
+      { label: "About", href: "/about" },
+      { label: "Stories", href: "/#stories" },
+      { label: "Careers", href: "/about#careers" },
+      { label: "Press", href: "/about" },
     ],
   },
   {
     label: "Resources",
     links: [
-      { label: "Help center", href: "#" },
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "Help center", href: "/about" },
+      { label: "Privacy", href: "/privacy" },
+      { label: "Terms", href: "/privacy" },
+      { label: "Contact", href: "mailto:hello@solace.app" },
     ],
   },
 ];
-
 export function Footer() {
   return (
     <footer
@@ -228,10 +227,15 @@ export function Footer() {
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
-            {["Privacy", "Terms", "Cookies", "Accessibility"].map((l) => (
+            {[
+              { label: "Privacy", href: "/privacy" },
+              { label: "Terms", href: "/privacy" },
+              { label: "Cookies", href: "/privacy" },
+              { label: "Accessibility", href: "/about" },
+            ].map((l) => (
               <a
-                key={l}
-                href="#"
+                key={l.label}
+                href={l.href}
                 style={{
                   fontSize: 13,
                   color: "rgba(244,246,241,0.45)",
@@ -242,7 +246,7 @@ export function Footer() {
                   (e.currentTarget.style.color = "rgba(244,246,241,0.45)")
                 }
               >
-                {l}
+                {l.label}
               </a>
             ))}
           </div>

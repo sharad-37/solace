@@ -1,3 +1,5 @@
+import Script from "next/script";
+
 export function StructuredData() {
   const orgSchema = {
     "@context": "https://schema.org",
@@ -24,8 +26,10 @@ export function StructuredData() {
   };
 
   return (
-    <script
+    <Script
+      id="solace-structured-data"
       type="application/ld+json"
+      strategy="beforeInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
     />
   );

@@ -7,10 +7,10 @@ import { Moon, Sun, Menu, X } from "lucide-react";
 import { Butterfly } from "@/components/illustrations/Butterfly";
 
 const navLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Aura", href: "#aura" },
-  { label: "Stories", href: "#stories" },
-  { label: "About", href: "#about" },
+  { label: "Features", href: "/#features" },
+  { label: "Aura", href: "/#aura" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "About", href: "/about" },
 ];
 
 export function Navbar() {

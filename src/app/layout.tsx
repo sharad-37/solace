@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
-import { StructuredData } from "@/components/seo/StructuredData";
+//import { StructuredData } from "@/components/seo/StructuredData";
 import { Inter, Manrope } from "next/font/google";
 
 const inter = Inter({
@@ -100,17 +100,42 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Solace",
+    operatingSystem: "iOS, Android, Web",
+    applicationCategory: "HealthApplication",
+    description:
+      "Solace helps you reflect, track your emotions, and build healthier habits with Aura — your AI wellness companion.",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.9",
+      ratingCount: "2400",
+    },
+    creator: {
+      "@type": "Organization",
+      name: "Solace Wellness, Inc.",
+    },
+  };
+
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${inter.variable} ${manrope.variable}`}
-    >
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="antialiased">
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>
-        <StructuredData />
         <ThemeProvider>
           <Navbar />
           {children}
