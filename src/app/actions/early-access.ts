@@ -34,122 +34,287 @@ async function saveSignup(email: string) {
   return true;
 }
 
-/* ═════════════════════════════════════════
-   Admin Notification via Resend
-   (works because it sends only to YOUR verified email)
-   ═════════════════════════════════════════ */
-async function notifyAdmin(email: string, totalCount: number) {
-  if (!process.env.RESEND_API_KEY || !process.env.ADMIN_EMAIL) return;
+/* ═══════════════════════════════════════════════════
+   BRAND TOKENS (mirrored from design.md)
+   ═══════════════════════════════════════════════════ */
+const BRAND = {
+  // Surface
+  canvasSoft: "#e8ebe6",
+  canvas: "#ffffff",
+  inkSurface: "#0e0f0c",
 
-  try {
-    const { Resend } = await import("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
+  // Brand
+  primary: "#9fe870",
+  primaryPale: "#e2f6d5",
+  onPrimary: "#0e0f0c",
 
-    const ts = new Date().toLocaleString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
+  // Text
+  ink: "#0e0f0c",
+  inkDeep: "#163300",
+  body: "#454745",
+  mute: "#868685",
 
-    await resend.emails.send({
-      from: "Solace Admin <onboarding@resend.dev>",
-      to: process.env.ADMIN_EMAIL,
-      subject: `🦋 New signup: ${email}`,
-      html: `
-<!DOCTYPE html>
-<html lang="en">
+  // Borders
+  borderSoft: "rgba(14,15,12,0.06)",
+  borderMedium: "rgba(14,15,12,0.10)",
+};
+
+/* ═══════════════════════════════════════════════════
+   THE SOLACE BUTTERFLY (inline SVG — same as icon.svg)
+   Pass color to invert for dark surfaces.
+   ═══════════════════════════════════════════════════ */
+function butterflySvg(size: number, color: string = BRAND.ink) {
+  return `
+<svg width="${size}" height="${size}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle;">
+  <path d="M32 30 C32 30 18 12 8 16 C2 19 4 30 14 32 C22 33 30 32 32 30Z" fill="${color}"/>
+  <path d="M32 30 C32 30 46 12 56 16 C62 19 60 30 50 32 C42 33 34 32 32 30Z" fill="${color}"/>
+  <path d="M32 34 C32 34 20 38 16 48 C13 55 22 56 28 50 C31 47 32 40 32 34Z" fill="${color}" opacity="0.75"/>
+  <path d="M32 34 C32 34 44 38 48 48 C51 55 42 56 36 50 C33 47 32 40 32 34Z" fill="${color}" opacity="0.75"/>
+  <ellipse cx="32" cy="32" rx="2" ry="10" fill="${color}"/>
+</svg>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   ADMIN NOTIFICATION EMAIL — Wise design system
+   ═══════════════════════════════════════════════════ */
+function adminEmailHtml(email: string, totalCount: number) {
+  const now = new Date();
+  const ts = now.toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  // Pull the localpart for a quick visual hint
+  const localpart = email.split("@")[0];
+  const domainPart = email.split("@")[1] || "";
+
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
   <title>New Solace signup</title>
-</head>
-<body style="margin: 0; padding: 0; background-color: #e8ebe6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #e8ebe6;">
-    <tr>
-      <td align="center" style="padding: 40px 16px;">
-        <table role="presentation" width="520" cellpadding="0" cellspacing="0" border="0" style="max-width: 520px; width: 100%;">
+  <style>
+    /* ─── Reset ─── */
+    body, html { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    table { border-collapse: collapse !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { border: 0; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { color: inherit; text-decoration: none; }
+    p { margin: 0; padding: 0; }
+    h1, h2, h3, h4 { margin: 0; padding: 0; }
 
-          <!-- Brand -->
+    /* ─── Brand-coherent dark mode ─── */
+    @media (prefers-color-scheme: dark) {
+      .bg-canvas-soft { background-color: ${BRAND.inkSurface} !important; }
+      .bg-canvas { background-color: #1a1c18 !important; }
+      .text-ink { color: ${BRAND.canvasSoft} !important; }
+      .text-body { color: #b8bcbd !important; }
+      .text-mute { color: #868685 !important; }
+      .text-ink-deep { color: ${BRAND.primary} !important; }
+      .border-soft { border-color: rgba(244,246,241,0.08) !important; }
+      .stat-bg { background-color: rgba(159,232,112,0.08) !important; }
+      .email-pill-bg { background-color: rgba(244,246,241,0.05) !important; }
+      .butterfly-light { filter: invert(1) brightness(0.95); }
+    }
+
+    /* ─── Mobile ─── */
+    @media only screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .card { padding: 28px 24px !important; border-radius: 20px !important; }
+      .outer-padding { padding: 24px 12px !important; }
+      .h1-mobile { font-size: 28px !important; line-height: 32px !important; }
+      .email-pill-mobile { font-size: 14px !important; padding: 12px 16px !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-canvas-soft" style="margin: 0; padding: 0; background-color: ${BRAND.canvasSoft}; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+
+  <!-- ─── Preheader (inbox preview) ─── -->
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all; font-size: 1px; line-height: 1px; color: ${BRAND.canvasSoft};">
+    A quiet new signup just joined the Solace beta — total reflectors growing.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-canvas-soft" style="background-color: ${BRAND.canvasSoft};">
+    <tr>
+      <td align="center" class="outer-padding" style="padding: 56px 24px;">
+
+        <!-- ═══════════ CONTAINER ═══════════ -->
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" class="container" style="max-width: 560px; width: 100%;">
+
+          <!-- ─── Brand mark ─── -->
           <tr>
-            <td style="padding-bottom: 24px;">
+            <td align="center" style="padding-bottom: 32px;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="vertical-align: middle; padding-right: 8px;">
-                    <svg width="22" height="22" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M32 30 C32 30 18 12 8 16 C2 19 4 30 14 32 C22 33 30 32 32 30Z" fill="#0e0f0c"/>
-                      <path d="M32 30 C32 30 46 12 56 16 C62 19 60 30 50 32 C42 33 34 32 32 30Z" fill="#0e0f0c"/>
-                      <path d="M32 34 C32 34 20 38 16 48 C13 55 22 56 28 50 C31 47 32 40 32 34Z" fill="#0e0f0c" opacity="0.75"/>
-                      <path d="M32 34 C32 34 44 38 48 48 C51 55 42 56 36 50 C33 47 32 40 32 34Z" fill="#0e0f0c" opacity="0.75"/>
-                      <ellipse cx="32" cy="32" rx="2" ry="10" fill="#0e0f0c"/>
-                    </svg>
+                  <td class="butterfly-light" style="vertical-align: middle; padding-right: 10px; line-height: 0;">
+                    ${butterflySvg(28, BRAND.ink)}
                   </td>
-                  <td style="vertical-align: middle; font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 15px; color: #0e0f0c; letter-spacing: -0.01em;">
-                    Solace · Admin
+                  <td class="text-ink" style="vertical-align: middle; font-family: 'Manrope', 'Inter', -apple-system, sans-serif; font-weight: 900; font-size: 20px; color: ${BRAND.ink}; letter-spacing: -0.02em; line-height: 1;">
+                    Solace
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
 
-          <!-- Card -->
+          <!-- ═══════════ MAIN CARD ═══════════ -->
           <tr>
-            <td style="background-color: #ffffff; border-radius: 20px; padding: 32px;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
+            <td class="bg-canvas card" style="background-color: ${BRAND.canvas}; border-radius: 24px; padding: 40px 36px;">
+
+              <!-- Lime "New signup" pill -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
                 <tr>
-                  <td style="background-color: #9fe870; padding: 5px 12px; border-radius: 9999px; font-family: -apple-system, sans-serif; font-weight: 700; color: #0e0f0c; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;">
-                    🦋 New signup
+                  <td style="background-color: ${BRAND.primary}; padding: 7px 14px; border-radius: 9999px; font-family: 'Inter', sans-serif; font-weight: 700; color: ${BRAND.onPrimary}; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; line-height: 1;">
+                    🦋 &nbsp;New signup
                   </td>
                 </tr>
               </table>
 
-              <h2 style="font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 26px; line-height: 30px; letter-spacing: -0.01em; color: #0e0f0c; margin: 0 0 8px 0;">
-                Someone just joined the beta.
-              </h2>
+              <!-- Headline (Wise display-md, Manrope 900) -->
+              <h1 class="text-ink h1-mobile" style="font-family: 'Manrope', 'Inter', sans-serif; font-weight: 900; font-size: 34px; line-height: 36px; letter-spacing: -0.02em; color: ${BRAND.ink}; margin: 0 0 6px 0;">
+                Someone just joined.
+              </h1>
 
-              <p style="font-family: -apple-system, sans-serif; font-size: 14px; line-height: 20px; color: #868685; margin: 0 0 24px 0;">
+              <!-- Subheadline with deep ink accent -->
+              <p class="text-ink-deep" style="font-family: 'Manrope', 'Inter', sans-serif; font-weight: 900; font-size: 20px; line-height: 26px; letter-spacing: -0.01em; color: ${BRAND.inkDeep}; margin: 0 0 24px 0;">
+                The list is growing — quietly.
+              </p>
+
+              <!-- Timestamp -->
+              <p class="text-mute" style="font-family: 'Inter', sans-serif; font-size: 13px; line-height: 20px; color: ${BRAND.mute}; margin: 0 0 28px 0;">
                 ${ts}
               </p>
 
-              <div style="background-color: #e8ebe6; padding: 14px 18px; border-radius: 14px; margin-bottom: 20px;">
-                <p style="font-family: -apple-system, sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #868685; margin: 0 0 4px 0;">
-                  Email
-                </p>
-                <p style="font-family: 'SF Mono', Monaco, monospace; font-size: 15px; color: #0e0f0c; margin: 0; word-break: break-all;">
-                  ${email}
+              <!-- ─── Divider ─── -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                <tr>
+                  <td class="border-soft" style="border-top: 1px solid ${BRAND.borderSoft}; font-size: 0; line-height: 0; height: 1px;">&nbsp;</td>
+                </tr>
+              </table>
+
+              <!-- ─── Email block (signature interactive card pattern) ─── -->
+              <p class="text-mute" style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: ${BRAND.mute}; margin: 0 0 10px 0;">
+                Reflector
+              </p>
+
+              <div class="email-pill-bg" style="background-color: ${BRAND.canvasSoft}; padding: 18px 20px; border-radius: 16px; margin-bottom: 24px;">
+                <p class="text-ink email-pill-mobile" style="font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace; font-size: 16px; line-height: 22px; color: ${BRAND.ink}; margin: 0; word-break: break-all; font-weight: 500;">
+                  <span style="color: ${BRAND.ink};">${localpart}</span><span class="text-mute" style="color: ${BRAND.mute};">@${domainPart}</span>
                 </p>
               </div>
 
-              <div style="display: inline-block; background-color: #0e0f0c; padding: 10px 18px; border-radius: 9999px;">
-                <span style="font-family: -apple-system, sans-serif; font-size: 13px; color: rgba(244,246,241,0.7); margin-right: 6px;">Total signups:</span>
-                <span style="font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 14px; color: #9fe870;">${totalCount}</span>
-              </div>
+              <!-- ─── Stat row (polarity-flipped dark pill — Wise signature) ─── -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="background-color: ${BRAND.ink}; padding: 14px 22px; border-radius: 9999px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="vertical-align: middle; padding-right: 8px; line-height: 0;">
+                          ${butterflySvg(18, BRAND.primary)}
+                        </td>
+                        <td style="vertical-align: middle; font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(244,246,241,0.6); padding-right: 8px; line-height: 1;">
+                          Total reflectors
+                        </td>
+                        <td style="vertical-align: middle; font-family: 'Manrope', 'Inter', sans-serif; font-weight: 900; font-size: 16px; color: ${BRAND.primary}; letter-spacing: -0.01em; line-height: 1;">
+                          ${totalCount.toLocaleString()}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
 
-              <!-- Reminder -->
-              <p style="font-family: -apple-system, sans-serif; font-size: 12px; line-height: 18px; color: #868685; margin: 24px 0 0 0; padding-top: 16px; border-top: 1px solid rgba(14,15,12,0.06);">
-                💡 Remember to send them a welcome reply when you're ready, or save the full list from <code style="background: rgba(14,15,12,0.06); padding: 2px 6px; border-radius: 4px; font-family: monospace;">data/signups.json</code>
+            </td>
+          </tr>
+
+          <!-- ═══════════ HELPER NOTE ═══════════ -->
+          <tr>
+            <td style="padding: 28px 12px 0 12px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="text-mute" style="font-family: 'Inter', sans-serif; font-size: 12px; line-height: 18px; color: ${BRAND.mute}; padding: 14px 18px; background-color: rgba(14,15,12,0.025); border-radius: 12px;">
+                    💡 &nbsp;Reply to this signup personally when you're ready — early-stage founders who do this convert 4× more believers.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══════════ FOOTER ═══════════ -->
+          <tr>
+            <td align="center" style="padding: 36px 12px 0 12px;">
+              <p style="font-family: 'Manrope', 'Inter', sans-serif; font-weight: 600; font-style: italic; font-size: 13px; line-height: 18px; color: ${BRAND.mute}; margin: 0 0 4px 0;">
+                Small reflections.
+              </p>
+              <p style="font-family: 'Manrope', 'Inter', sans-serif; font-weight: 600; font-style: italic; font-size: 13px; line-height: 18px; color: ${BRAND.mute}; margin: 0;">
+                Meaningful growth.
               </p>
             </td>
           </tr>
 
         </table>
+
       </td>
     </tr>
   </table>
+
 </body>
-</html>
-      `,
+</html>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   PLAIN TEXT FALLBACK (for spam filters + minimal clients)
+   ═══════════════════════════════════════════════════ */
+function adminEmailText(email: string, totalCount: number) {
+  return `🦋 NEW SOLACE SIGNUP
+
+Someone just joined the beta.
+
+Reflector: ${email}
+Total reflectors: ${totalCount}
+Time: ${new Date().toLocaleString()}
+
+—
+Small reflections. Meaningful growth.
+Solace`;
+}
+
+/* ═══════════════════════════════════════════════════
+   ADMIN NOTIFICATION (Resend → your verified email)
+   ═══════════════════════════════════════════════════ */
+async function notifyAdmin(email: string, totalCount: number) {
+  if (!process.env.RESEND_API_KEY || !process.env.ADMIN_EMAIL) {
+    console.warn("Resend env vars missing — admin notification skipped.");
+    return;
+  }
+
+  try {
+    const { Resend } = await import("resend");
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    await resend.emails.send({
+      from: "Solace <onboarding@resend.dev>",
+      to: process.env.ADMIN_EMAIL,
+      subject: `🦋 New reflector: ${email}`,
+      html: adminEmailHtml(email, totalCount),
+      text: adminEmailText(email, totalCount),
     });
   } catch (err) {
     console.error("Admin notification failed:", err);
   }
 }
 
-/* ═════════════════════════════════════════
-   Server Action
-   ═════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   SERVER ACTION
+   ═══════════════════════════════════════════════════ */
 export async function joinEarlyAccess(
   _prev: SignupResult | null,
   formData: FormData,
@@ -172,10 +337,10 @@ export async function joinEarlyAccess(
     const raw = await fs.readFile(SIGNUPS_FILE, "utf-8");
     totalCount = JSON.parse(raw).length;
   } catch {
-    // serverless FS read-only on Vercel; that's expected
+    // Vercel's serverless FS is read-only; that's expected
   }
 
-  // Notify yourself (works on Resend sandbox because it sends only to your verified email)
+  // Send beautifully branded admin notification
   await notifyAdmin(email, totalCount);
 
   return {
