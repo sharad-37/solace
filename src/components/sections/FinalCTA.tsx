@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Butterfly } from "@/components/illustrations/Butterfly";
+import { EarlyAccessForm } from "@/components/forms/EarlyAccessForm";
 
 export function FinalCTA() {
   const ref = useRef<HTMLDivElement>(null);
@@ -212,66 +213,14 @@ export function FinalCTA() {
         </motion.p>
 
         {/* Email + CTA form */}
-        <motion.form
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.65 }}
-          onSubmit={(e) => e.preventDefault()}
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 10,
-            justifyContent: "center",
-            maxWidth: 520,
-            margin: "0 auto 32px",
-          }}
+          style={{ marginBottom: 32 }}
         >
-          <input
-            type="email"
-            placeholder="you@example.com"
-            aria-label="Your email address"
-            required
-            style={{
-              flex: "1 1 240px",
-              padding: "14px 20px",
-              borderRadius: 24,
-              border: "1px solid rgba(244,246,241,0.18)",
-              backgroundColor: "rgba(244,246,241,0.06)",
-              color: "#f4f6f1",
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 15,
-              outline: "none",
-              minWidth: 0,
-            }}
-            onFocus={(e) =>
-              (e.currentTarget.style.borderColor = "rgba(159,232,112,0.6)")
-            }
-            onBlur={(e) =>
-              (e.currentTarget.style.borderColor = "rgba(244,246,241,0.18)")
-            }
-          />
-          <motion.button
-            type="submit"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.97 }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "14px 28px",
-              borderRadius: 24,
-              border: "none",
-              backgroundColor: "var(--primary)",
-              color: "var(--on-primary)",
-              fontSize: 16,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Get Early Access
-            <ArrowRight size={18} />
-          </motion.button>
-        </motion.form>
+          <EarlyAccessForm variant="dark" />
+        </motion.div>
 
         {/* Microcopy */}
         <motion.p
