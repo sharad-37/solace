@@ -4,8 +4,13 @@ import { motion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import { MoodCheckInCard } from "./MoodCheckInCard";
 import { FloatingButterflies } from "@/components/illustrations/FloatingButterflies";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 
-export function Hero() {
+interface HeroProps {
+  signupCount: number;
+}
+
+export function Hero({ signupCount }: HeroProps) {
   return (
     <section
       style={{
@@ -237,7 +242,9 @@ export function Hero() {
                 )}
               </div>
               <p style={{ fontSize: 14, color: "var(--body)", margin: 0 }}>
-                <strong style={{ color: "var(--ink)" }}>2,400+ people</strong>{" "}
+                <strong style={{ color: "var(--ink)" }}>
+                  <AnimatedCounter value={signupCount} />+ people
+                </strong>{" "}
                 already reflecting daily
               </p>
             </motion.div>

@@ -194,7 +194,7 @@ export function Navbar() {
             {/* Primary CTA */}
             {isDesktop && (
               <a
-                href="#early-access"
+                href="/#early-access"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -288,7 +288,7 @@ export function Navbar() {
             ))}
 
             <motion.a
-              href="#early-access"
+              href="/#early-access"
               onClick={() => setMobileOpen(false)}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
