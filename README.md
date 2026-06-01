@@ -124,7 +124,7 @@ Solace runs on a custom Wise-inspired design system. Every visual choice is inte
 ### Install
 
 ```bash
-git clone https://github.com/sharad-37/solace.git
+git clone https://github.com/your-username/solace.git
 cd solace
 npm install
 ```
@@ -300,7 +300,7 @@ If you have feedback, ideas, or just want to talk wellness tech / calm UX / Wise
 
 - ⭐ Star this repo if the design or approach resonates
 - 🐛 [Open an issue](https://github.com/sharad-37/solace/issues) if you spot a bug on the landing page
-- 💌 Reach out via the [waitlist form](https://solace-gray-mu.vercel.app/launch) or LinkedIn
+- 💌 Reach out via the [waitlist form](https://solace-gray-mu.vercel.app/launch) or [LinkedIn](https://www.linkedin.com/in/sharad-manani)
 
 I read every message personally.
 
