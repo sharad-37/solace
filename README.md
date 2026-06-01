@@ -323,13 +323,21 @@ Built on the shoulders of builders smarter than me:
 
 ## 📝 License
 
-MIT © 2025 Solace Wellness
+**This project is source-available, NOT open source.**
 
-The code in this repository is open source.
-The Solace brand, name, and "Aura" companion concept are not.
-If you're inspired to build something gentle for mental wellness — please do. The world needs more of it.
+The code in this repository may be viewed for educational and reference purposes only.
 
----
+❌ **Commercial use is prohibited**
+❌ **Brand copying is prohibited** (name "Solace", butterfly mark, color system, Aura concept, design language)
+❌ **Production deployment of forks is prohibited**
+
+✅ Reading, learning, and discussing the technical implementation is welcome
+
+See [`LICENSE`](./LICENSE) for complete terms.
+
+If you're building something genuinely your own and want to chat about wellness UX, design systems, or Next.js patterns — DM me. I'm happy to share knowledge. I'm not happy to be reskinned.
+
+— [Sharad Manani]
 
 <div align="center">
 

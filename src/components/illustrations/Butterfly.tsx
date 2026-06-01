@@ -1,3 +1,12 @@
+/**
+ * 🦋 Solace Butterfly — Brand Mark
+ *
+ * This component is the protected brand identity of Solace.
+ * It is NOT licensed for derivative use.
+ * Forking this file into a competing product is prohibited.
+ *
+ * See LICENSE at project root for complete terms.
+ */
 "use client";
 
 import { motion } from "framer-motion";

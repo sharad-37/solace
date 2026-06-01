@@ -364,4 +364,4 @@ to catch type errors locally. If `build` fails, **fix the errors before suggesti
 
 ---
 
-_Last updated: 2025_
+_Last updated: 2026_
