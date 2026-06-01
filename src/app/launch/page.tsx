@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: "Solace",
     images: [
       {
-        url: "https://solace-gray-mu.vercel.app/launch/whatsapp-image",
+        url: "https://solace-gray-mu.vercel.app/launch/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Solace — A calm AI companion for daily reflection",
@@ -29,7 +29,6 @@ export const metadata: Metadata = {
     images: ["https://solace-gray-mu.vercel.app/launch/twitter-image"],
   },
 };
-
 export default function LaunchPage() {
   redirect("/");
 }
