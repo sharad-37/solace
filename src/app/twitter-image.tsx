@@ -20,7 +20,6 @@ export default async function HomeTwitterCard() {
         position: "relative",
       }}
     >
-      {/* Lime glow accent */}
       <div
         style={{
           position: "absolute",
@@ -35,40 +34,6 @@ export default async function HomeTwitterCard() {
         }}
       />
 
-      {/* Floating butterfly */}
-      <div
-        style={{
-          position: "absolute",
-          top: 100,
-          right: 110,
-          opacity: 0.4,
-          display: "flex",
-        }}
-      >
-        <svg width="36" height="36" viewBox="0 0 64 64">
-          <path
-            d="M32 30 C32 30 18 12 8 16 C2 19 4 30 14 32 C22 33 30 32 32 30Z"
-            fill="#0e0f0c"
-          />
-          <path
-            d="M32 30 C32 30 46 12 56 16 C62 19 60 30 50 32 C42 33 34 32 32 30Z"
-            fill="#0e0f0c"
-          />
-          <path
-            d="M32 34 C32 34 20 38 16 48 C13 55 22 56 28 50 C31 47 32 40 32 34Z"
-            fill="#0e0f0c"
-            opacity="0.65"
-          />
-          <path
-            d="M32 34 C32 34 44 38 48 48 C51 55 42 56 36 50 C33 47 32 40 32 34Z"
-            fill="#0e0f0c"
-            opacity="0.65"
-          />
-          <ellipse cx="32" cy="32" rx="2" ry="10" fill="#0e0f0c" />
-        </svg>
-      </div>
-
-      {/* Brand */}
       <div
         style={{
           display: "flex",
@@ -111,7 +76,6 @@ export default async function HomeTwitterCard() {
         </span>
       </div>
 
-      {/* Headline */}
       <div
         style={{
           display: "flex",
@@ -135,7 +99,7 @@ export default async function HomeTwitterCard() {
         </p>
         <h1
           style={{
-            fontSize: 84,
+            fontSize: 80,
             fontWeight: 900,
             color: "#0e0f0c",
             lineHeight: 0.95,
@@ -150,7 +114,6 @@ export default async function HomeTwitterCard() {
         </h1>
       </div>
 
-      {/* CTA + domain */}
       <div
         style={{
           display: "flex",
@@ -174,14 +137,8 @@ export default async function HomeTwitterCard() {
         >
           🦋 &nbsp;Get Early Access
         </div>
-
         <p
-          style={{
-            fontSize: 18,
-            fontWeight: 600,
-            color: "#868685",
-            margin: 0,
-          }}
+          style={{ fontSize: 18, fontWeight: 600, color: "#868685", margin: 0 }}
         >
           solace.app
         </p>

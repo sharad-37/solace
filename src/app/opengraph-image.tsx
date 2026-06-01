@@ -19,7 +19,6 @@ export default async function OGImage() {
         fontFamily: "system-ui, sans-serif",
       }}
     >
-      {/* Top: logo */}
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
         <svg width="56" height="56" viewBox="0 0 64 64">
           <path
@@ -54,7 +53,6 @@ export default async function OGImage() {
         </span>
       </div>
 
-      {/* Middle: headline */}
       <div style={{ display: "flex", flexDirection: "column" }}>
         <p
           style={{
@@ -71,13 +69,12 @@ export default async function OGImage() {
         </p>
         <h1
           style={{
-            fontSize: 80,
+            fontSize: 76,
             fontWeight: 900,
             color: "#0e0f0c",
             lineHeight: 0.95,
             letterSpacing: "-0.03em",
             margin: 0,
-            maxWidth: 1040,
             display: "flex",
             flexDirection: "column",
           }}
@@ -87,7 +84,6 @@ export default async function OGImage() {
         </h1>
       </div>
 
-      {/* Bottom: CTA pill */}
       <div
         style={{
           display: "flex",
@@ -109,15 +105,7 @@ export default async function OGImage() {
         >
           Get Early Access →
         </div>
-        <p
-          style={{
-            fontSize: 18,
-            color: "#868685",
-            margin: 0,
-          }}
-        >
-          solace.app
-        </p>
+        <p style={{ fontSize: 18, color: "#868685", margin: 0 }}>solace.app</p>
       </div>
     </div>,
     { ...size },
