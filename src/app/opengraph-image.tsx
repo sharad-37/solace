@@ -21,12 +21,7 @@ export default async function OGImage() {
     >
       {/* Top: logo */}
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <svg
-          width="56"
-          height="56"
-          viewBox="0 0 64 64"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg width="56" height="56" viewBox="0 0 64 64">
           <path
             d="M32 30 C32 30 18 12 8 16 C2 19 4 30 14 32 C22 33 30 32 32 30Z"
             fill="#0e0f0c"
